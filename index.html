@@ -521,23 +521,40 @@
     });
 
     /* ========== YES Button - Celebration ========== */
-    btnYes.addEventListener('click', () => {
-      // Add celebration classes
-      document.body.classList.add('celebration');
-      card.classList.add('celebration');
-      cardContent.classList.add('hide');
-      successContent.classList.add('show');
 
-      // Heart explosion
-      createHeartExplosion();
-
-      // Play background music
-      bgMusic.volume = 0.3;
-      bgMusic.play().catch(() => {}); // Autoplay may be blocked
-
-      // Remove NO button from flow
-      btnNo.style.display = 'none';
+    btnYes.addEventListener('click', async () => {
+  // 💌 Trigger n8n webhook
+  try {
+    await fetch("https://db-n8n.uaaep3.easypanel.host/webhook/webhook/valentine-yes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: "Your Queen 👑",
+        response: "YES",
+        message: "She accepted the proposal 💘",
+        time: new Date().toISOString()
+      })
     });
+  } catch (err) {
+    console.log("Webhook error:", err);
+  }
+
+  // 🎉 Continue your celebration animation
+  document.body.classList.add('celebration');
+  card.classList.add('celebration');
+  cardContent.classList.add('hide');
+  successContent.classList.add('show');
+
+  createHeartExplosion();
+
+  bgMusic.volume = 0.3;
+  bgMusic.play().catch(() => {});
+
+  btnNo.style.display = 'none';
+});
+
 
     function createHeartExplosion() {
       const centerX = window.innerWidth / 2;
